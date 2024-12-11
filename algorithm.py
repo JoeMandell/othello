@@ -10,6 +10,10 @@ def basic_heuristic(state):
            state.board[0, :].sum() + state.board[:, 0].sum() + \
            state.board[7, :].sum() + state.board[:, 7].sum()
 
+def discStrategy_heuristic(state):
+    if state.winner() is not None:
+        return state.winner() * 128
+    return state.board.sum()
 
 def greedy(heuristic):
     return lambda s: max(s.children(), key=lambda x: heuristic(x) * s.player)
