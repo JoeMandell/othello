@@ -9,8 +9,7 @@ class MCTSnode:
         #if visits = 3, wins = 1, it means we had 1 win and (3-1)=2 losses from this node.
         self.visits = 0
         self.wins = 0
-        self.untried = state.valid_moves(state)
-        self.move = None
+        self.untried = state.children()
 
     #returns true if someone has won the game, otherwise false
     #REFACTOR - winner is long, could reduce to simply check for an end state instead

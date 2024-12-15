@@ -13,13 +13,12 @@ def play(p1, p2):
         move = None
         while move not in game.children():
             i += 1
-            print("move: ", i)
+            # print("move: ", i)
 
             if game.player == 1:
                 move = p1(game)
             else:
                 move = p2(game)
-            sleep(10)
         states.append(game)
         game = move
     states.append(game)

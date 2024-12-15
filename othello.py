@@ -108,7 +108,3 @@ class State:
         if not nodes:
             nodes = [State(np.copy(self.board), -self.player)]
         return nodes
-    
-    def valid_moves(self, state):
-        out = [move for move in product(*[range(x) for x in state.board.shape]) if state.isvalid(move)]
-        return out
