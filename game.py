@@ -8,13 +8,18 @@ import othello
 def play(p1, p2):
     game = othello.newgame()
     states = []
+    i = 0
     while game.winner() is None:
         move = None
         while move not in game.children():
+            i += 1
+            print("move: ", i)
+
             if game.player == 1:
                 move = p1(game)
             else:
                 move = p2(game)
+            sleep(10)
         states.append(game)
         game = move
     states.append(game)
