@@ -9,7 +9,7 @@ variable = range(1,4)
 
 #setup
 y_values = []
-batchsize = 50
+batchsize = 10
 
 for value in variable:
     print(value)

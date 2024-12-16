@@ -91,12 +91,16 @@ class State:
         def stuck(state):
             return not any(state.isvalid(move)
                            for move in product(*[range(x) for x in state.board.shape]))
-
+        #the chain(*...) method unpacks the 2d board into a 1d list, to check if the board is entirely filled.
         if all(chain(*self.board)) or (stuck(self) and stuck(self.children()[0])):
             return np.sign(self.board.sum())
         else:
             return None
+        
+    def is_terminal(self):
+        return self.winner() != None
 
+    #seems to return all valid children of the current state.
     def children(self):
         nodes = [self.place(move) for move in product(*[range(x)
                                                         for x in self.board.shape])
