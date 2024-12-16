@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 #define a parameter that you want to change in the test algorithm
 #could be search depth for minimax, iteration count for monte carlo, etc.
-variable = range(1,40)
+variable = range(1,4)
 
 #setup
 y_values = []
@@ -15,8 +15,8 @@ for value in variable:
     print(value)
 
     #define your algorithm and benchmark
-    test_algo = algorithm.mcts(value)
-    bench_algo = algorithm.minimax(algorithm.basic_heuristic, 2)
+    test_algo = algorithm.minimax(algorithm.basic_heuristic, value)
+    bench_algo = algorithm.stochastic
 
     wins = 0
     for _ in range(batchsize):

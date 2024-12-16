@@ -3,21 +3,44 @@ import algorithm
 import tqdm
 import time
 
-#runs a hundred games of two algorithms against each other.
-white = 0
-games = 10
-start_time = time.time()
-for i in tqdm.trange(games):
-    winner, states = game.play(
-        algorithm.mcts(10), #algorithm for white
-        algorithm.minimax(algorithm.basic_heuristic, 3), #algorithm for black
-        # algorithm.stochastic
-    )
-    print(winner)
-    if winner == 1: white += 1
+def test_AsWhite(OurAlgorithm, Opponent):
+    #runs a hundred games of two algorithms against each other.
+    white = 0
+    for i in tqdm.trange(100):
+        winner, states = game.play(
+            OurAlgorithm, #algorithm for white
+            Opponent, #algorithm for black
+        )
+        if winner == 1: white += 1
+    print(f'White Winrate: {white}%')
 
-end_time = time.time()
-print(f'Elapsed time: {(end_time-start_time)/games}')
+def test_AsBlack(OurAlgorithm, Opponent):
+    #runs a hundred games of two algorithms against each other.
+    black = 0
+    for i in tqdm.trange(100):
+        winner, states = game.play(
+            Opponent, #algorithm for white
+            OurAlgorithm, #algorithm for black
+        )
+        if winner == -1: black += 1
+    print(f'Black Winrate: {black}%')
 
-print(f'Winrate: {(white*100)//games}%')
-#the winrate i
+def original_test():
+    games = 100
+    #runs a hundred games of two algorithms against each other.
+    white = 0
+    start_time = time.time()
+    for i in tqdm.trange(games):
+        winner, states = game.play(
+            algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), #algorithm for white
+            algorithm.stochastic, #algorithm for black
+        )
+        if winner == 1: white += 1
+    end_time = time.time()
+    print(f'Average time per game: {(end_time-start_time)/games}')
+    print(f'White Winrate: {(white*100)//games}%')
+
+
+if __name__=="__main__":
+    test_AsBlack(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
+    test_AsWhite(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
