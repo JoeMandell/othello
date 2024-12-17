@@ -17,6 +17,7 @@ class State:
     def __init__(self, board, player):
         self.board = board
         self.player = player
+        self.turn = 1
 
     def __repr__(self):
         ret = '\n'

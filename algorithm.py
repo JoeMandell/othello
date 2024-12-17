@@ -1,8 +1,52 @@
 from math import *
 import random
+import math
+
+from othello import State
 
 
 def basic_heuristic(state):
+    if state.winner() is not None:
+        return state.winner() * 128
+    return state.board.sum() + \
+           state.board[([0, 0, 7, 7], [0, 7, 0, 7])].sum() * 8 + \
+           state.board[0, :].sum() + state.board[:, 0].sum() + \
+           state.board[7, :].sum() + state.board[:, 7].sum()
+################################################################
+def disc_heuristic(state):
+    if state.winner() is not None:
+        return state.winner() * 128
+    total = state.board.sum()
+    return total
+
+def mobility_heuristic(state):
+    if state.winner() is not None:
+        return state.winner() * 128
+    total = 0
+
+    for x in range(8):
+        for y in range(8):
+            move = (x, y)
+            if state.isvalid(move):
+                total += 1
+    return total
+
+def corners_heuristic(state):
+    winner = state.winner()
+    if winner is not None:
+        return winner * 128
+    total = state.board[([0, 0, 7, 7], [0, 7, 0, 7])].sum() * 4
+    return total
+
+def edges_heuristic(state):
+    winner = state.winner()
+    if winner is not None:
+        return winner * 128
+    total = state.board[0, :].sum() + state.board[:, 0].sum() + \
+            state.board[7, :].sum() + state.board[:, 7].sum()
+    return total
+
+def all_heuristic(state):
     if state.winner() is not None:
         return state.winner() * 128
     return state.board.sum() + \
@@ -10,11 +54,8 @@ def basic_heuristic(state):
            state.board[0, :].sum() + state.board[:, 0].sum() + \
            state.board[7, :].sum() + state.board[:, 7].sum()
 
-def discStrategy_heuristic(state):
-    if state.winner() is not None:
-        return state.winner() * 128
-    return state.board.sum()
 
+################################################################
 def greedy(heuristic):
     return lambda s: max(s.children(), key=lambda x: heuristic(x) * s.player)
 

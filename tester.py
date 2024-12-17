@@ -37,5 +37,10 @@ def original_test():
 
 
 if __name__=="__main__":
-    test_AsBlack(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
-    test_AsWhite(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
+    test_AsWhite(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic) #89 Winrate
+   # test_AsWhite(algorithm.stochastic_minimax(algorithm.new_new_mobility_heuristic, 2), algorithm.stochastic) #49 Winrate
+    #test_AsWhite(algorithm.stochastic_minimax(algorithm.mobility_heuristic, 3), algorithm.stochastic) #49 Winrate
+    #test_AsWhite(algorithm.stochastic_minimax(algorithm.disc_heuristic, 3), algorithm.stochastic) #86 Winrate
+    #test_AsWhite(algorithm.stochastic_minimax(algorithm.corners_heuristic, 3), algorithm.stochastic) #91
+    #test_AsWhite(algorithm.stochastic_minimax(algorithm.edges_heuristic, 3), algorithm.stochastic) #97
+    #test_AsWhite(algorithm.stochastic_minimax(algorithm.corners_heuristic, 3), algorithm.greedy(algorithm.disc_heuristic)) #91
