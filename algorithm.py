@@ -17,6 +17,52 @@ def discStrategy_heuristic(state):
         return state.winner() * 128
     return state.board.sum()
 
+# helper for weighted heuristic
+WEIGHTS = [4, -3, 2, 2, 2, 2, -3, 4,
+            -3, -4, -1, -1, -1, -1, -4, -3,
+            2, -1, 1, 0, 0, 1, -1, 2,
+            2, -1, 0, 1, 1, 0, -1, 2,
+            2, -1, 0, 1, 1, 0, -1, 2,
+            2, -1, 1, 0, 0, 1, -1, 2,
+            -3, -4, -1, -1, -1, -1, -4, -3,
+            4, -3, 2, 2, 2, 2, -3, 4]
+
+def cornerweight(state):
+    total = 0;
+    i = 0;
+    while i < 64:
+        if state.board[(i//8, i%8)] == state.player:
+            total += WEIGHTS[i];
+            #print "weights" + str(i) + "number:"+ str(StudentEngine.WEIGHTS[i])
+        if state.board[(i//8, i%8)] == -state.player:
+            total -= WEIGHTS[i];
+            #print "weights" + str(i) + "number:"+ str(StudentEngine.WEIGHTS[i])
+        i += 1
+    #print "cornerweight" + str(total)
+    return total
+
+def _get_cost(state):
+    """ Return the difference in number of pieces after the given move 
+    is executed. """
+
+    # Create a deepcopy of the board to preserve the state of the actual board
+    #newboard = deepcopy(board)
+    #newboard.execute_move(move, color)
+
+    # Count the # of pieces of each color on the board
+    num_pieces_op = (state.board == -state.player).sum()
+    num_pieces_me = (state.board == state.player).sum()
+    #print "_get_cost" + str(num_pieces_me - num_pieces_op)
+    # Return the difference in number of pieces
+    return num_pieces_me - num_pieces_op
+
+
+def weighted_heuristic(state):
+    if state.winner() is not None:
+        return state.winner() * 128
+    return 2 * cornerweight(state) + 3 * _get_cost(state)
+    
+
 def greedy(heuristic):
     return lambda s: max(s.children(), key=lambda x: heuristic(x) * s.player)
 
