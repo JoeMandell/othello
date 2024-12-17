@@ -14,6 +14,13 @@ try:
         delay=1,
         heuristic=algorithm.basic_heuristic
     )
+    # game.play_gui(
+    #     algorithm.stochastic_minimax(algorithm.basic_heuristic, 5),
+    #     # algorithm.stochastic_minimax(algorithm.basic_heuristic, 5),
+    #     delay=1,
+    #     heuristic=algorithm.basic_heuristic
+    # )
+    game.play_gui(algorithm.mcts(80))
 except (tkinter.TclError, KeyboardInterrupt, EOFError):
     print('\nQuit')
     exit(1)
