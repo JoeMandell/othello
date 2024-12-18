@@ -9,8 +9,8 @@ import tkinter
 #if you put in two algorithms they play against each other.
 try:
     game.play_gui(
-        algorithm.stochastic_minimax(algorithm.corners_heuristic, 3),
-        #algorithm.stochastic,
+        algorithm.minimax(algorithm.edges_heuristic, 3),
+         #algorithm.minimax(algorithm.corners_heuristic, 3),
         delay=1,
         heuristic=algorithm.basic_heuristic
     )
