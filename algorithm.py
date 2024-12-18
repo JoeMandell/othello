@@ -1,5 +1,8 @@
 from math import *
 import random
+import math
+
+from othello import State
 import MCTSnode
 
 test = False
@@ -9,14 +12,57 @@ def basic_heuristic(state):
         return state.winner() * 128
     return state.board.sum() + \
            state.board[([0, 0, 7, 7], [0, 7, 0, 7])].sum() * 4 + \
+           state.board[0, :].sum() + state.board[:, 0].sum() * 2 + \
+           state.board[7, :].sum() + state.board[:, 7].sum() * 2
+
+def new_basic_heuristic(state):
+    if state.winner() is not None:
+        return state.winner() * 128
+    return state.board[([0, 0, 7, 7], [0, 7, 0, 7])].sum() + \
            state.board[0, :].sum() + state.board[:, 0].sum() + \
            state.board[7, :].sum() + state.board[:, 7].sum()
 
-def discStrategy_heuristic(state):
+################################################################ Nate
+def disc_heuristic(state):
     if state.winner() is not None:
         return state.winner() * 128
-    return state.board.sum()
+    total = state.board.sum()
+    return total
 
+def mobility_heuristic(state):
+    if state.winner() is not None:
+        return state.winner() * 128
+    total = 0
+
+    current_player_mobility = 0
+    opponent_mobility = 0
+
+    for x in range(8):
+        for y in range(8):
+            move = (x, y)
+            if state.isvalid(move):
+                if state.player == -1:  # Current player is black (-1)
+                    current_player_mobility += 1
+                else:  # Current player is white (1)
+                    opponent_mobility += 1
+    return current_player_mobility - opponent_mobility
+
+def corners_heuristic(state):
+    winner = state.winner()
+    if winner is not None:
+        return winner * 128
+    total = state.board[([0, 0, 7, 7], [0, 7, 0, 7])].sum() * 4
+    return total
+
+def edges_heuristic(state):
+    winner = state.winner()
+    if winner is not None:
+        return winner * 128
+    total = state.board[0, :].sum() + state.board[:, 0].sum() + \
+            state.board[7, :].sum() + state.board[:, 7].sum()
+    return total
+
+################################################################ Nate
 # helper for weighted heuristic
 WEIGHTS = [4, -3, 2, 2, 2, 2, -3, 4,
             -3, -4, -1, -1, -1, -1, -4, -3,

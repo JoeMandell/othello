@@ -42,6 +42,7 @@ def original_test():
 
 
 if __name__=="__main__":
+<<<<<<< HEAD
     test_AsBlack(algorithm.killer_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
     test_AsBlack(algorithm.minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
     test_AsBlack(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic) # stochastic_minimax has a percentage of 10% to pick the second best move
@@ -50,3 +51,11 @@ if __name__=="__main__":
     test_AsWhite(algorithm.minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
     test_AsWhite(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic) # stochastic_minimax has a percentage of 10% to pick the second best move
 
+=======
+    test_AsBlack(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
+    #test_AsWhite(algorithm.stochastic_minimax(algorithm.basic_heuristic, 3), algorithm.stochastic)
+
+
+
+    #test_AsWhite(algorithm.stochastic_minimax(algorithm.edges_heuristic, 3), algorithm.minimax(algorithm.basic_heuristic, 3))
+>>>>>>> cf5eb31e633e6fb4801573d5b4046d1dfc19fda5
