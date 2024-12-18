@@ -196,3 +196,67 @@ def mcts(iterations):
 
 def stochastic(state):
     return random.choice(state.children())
+
+def killer_evaluate(state, depth, alpha, beta, heuristic, killers=None, cnt=[0]):
+    # Initialize the killer move table if not provided
+    if killers is None:
+        killers = {}
+
+    # Ensure the killers dictionary has a key for this depth
+    if depth not in killers:
+        killers[depth] = []  # Initialize an empty list for this depth
+
+    cnt[0] += 1  # Increment the counter for every node explored
+
+    if depth == 1 or state.is_terminal():
+        return heuristic(state), killers, cnt
+
+    children = state.children()
+    children = sorted(children, key=lambda x: heuristic(x), reverse=(state.player == 1))
+    # Separate killer and non-killer children
+# Ensure children are comparable by value, not by object identity
+    killer_children = [child for child in children if any(child == killer for killer in killers[depth])]
+    non_killer_children = [child for child in children if child not in killer_children]
+
+    # Combine killer and non-killer children
+    ordered_children = killer_children + non_killer_children
+
+    if state.player == 1:  # Maximizing player
+        value = -inf
+        for child in ordered_children:
+            cnt[0] += 1
+            temp_value, killers, cnt = killer_evaluate(child, depth - 1, alpha, beta, heuristic, killers, cnt)
+            value = max(value, temp_value)
+            if value > alpha:
+                alpha = value
+                # Add child to killer moves if it causes a beta cutoff
+                if alpha >= beta:
+                    if child not in killers[depth]:
+                        if len(killers[depth]) >= 5:  # Limit to 2 killer moves
+                            killers[depth].pop(0)
+                        killers[depth].append(child)
+                    break
+        return value, killers, cnt
+    else:  # Minimizing player
+        value = inf
+        for child in ordered_children:
+            cnt[0] += 1
+            temp_value, killers, cnt = killer_evaluate(child, depth - 1, alpha, beta, heuristic, killers, cnt)
+            value = min(value, temp_value)
+            if value < beta:
+                beta = value
+                # Add child to killer moves if it causes an alpha cutoff
+                if beta <= alpha:
+                    if child not in killers[depth]:
+                        if len(killers[depth]) >= 2:  # Limit to 2 killer moves
+                            killers[depth].pop(0)
+                        killers[depth].append(child)
+                    break
+        return value, killers, cnt
+
+
+    
+def killer_minimax(heuristic, max_depth):
+    counter = [0]  # Initialize the counter
+    return lambda s: max(s.children(), key=lambda x: killer_evaluate(
+        x, max_depth, -inf, inf, heuristic, {}, counter)[0] * s.player)
