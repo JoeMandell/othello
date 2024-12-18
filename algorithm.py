@@ -69,7 +69,8 @@ def stochastic_minimax(heuristic, max_depth):
 #MCTS helper functions
 def selection(node):
     while node.fully_expanded() and not node.is_terminal():
-        node = node.best_child()
+        node = node.rave_best_child()
+        # node.rave_visits += 1 #for RAVE
     # print(node.state)
     return node
 
@@ -81,17 +82,29 @@ def expansion(node):
 
 def simulation(node):
     state = node.state
+    played_states = []
     #playout by picking random moves
     while not state.is_terminal() and state.children() != []:
         state = random.choice(state.children())
+        played_states.append(state)
 
-    return state.winner()
+    return state.winner(),played_states
 
-def backpropagation(node,result,desired_winner):
+def backpropagation(node,result,desired_winner,played_states):
     while node is not None:
         node.visits += 1
         if result == desired_winner:
             node.wins += 1
+
+        for state in played_states:
+            stateHashable = state.board.tobytes()
+            if stateHashable not in node.amaf_visits:
+                node.amaf_visits[stateHashable] = 0
+                node.amaf_wins[stateHashable] = 0
+            node.amaf_visits[stateHashable] += 1
+            if result == desired_winner:
+                node.amaf_wins[stateHashable] += 1
+
         node = node.parent
 
 #this method does NOT need to know which player is calling it, since it only goes on number of visits
@@ -134,10 +147,10 @@ def mcts(iterations):
             node = selection(root_node)
             if not node.is_terminal():
                 child = expansion(node)
-                result = simulation(child)
-                backpropagation(child, result, desired_winner)
+                result, played_moves = simulation(child)
+                backpropagation(child, result, desired_winner, played_moves)
             else:
-                backpropagation(node, node.state.winner(), desired_winner)
+                backpropagation(node, node.state.winner(), desired_winner, [])
         # print(best_child(root_node).state)
             # print(f'{root_node.wins} / {root_node.visits}')
         # most_visited = most_visited_child(root_node)
